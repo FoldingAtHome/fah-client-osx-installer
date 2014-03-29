@@ -1,14 +1,13 @@
-# Configure system boilerplate
-import os, sys
-sys.path.append(os.environ.get('CONFIG_SCRIPTS_HOME',
-                               '../../control/config-scripts'))
-import config
-
-version = open('version/version.txt', 'r').read().strip()
-
 # Setup
-# these vars should probably all be in distpkg.add_vars()
-vars = [
+import os
+import sys
+env = Environment()
+try:
+    env.Tool('config', toolpath = [os.environ.get('CBANG_HOME')])
+except Exception, e:
+    raise Exception, 'CBANG_HOME not set?\n' + str(e)
+
+env.CBAddVariables(
     # desire everything built flat True, target 10.5
     # to get old build, use flat False, target 10.6 in scons-options.py
     BoolVariable('distpkg_flat', 'Build a flat OSX installer pkg', True),
@@ -24,18 +23,17 @@ vars = [
     ('sign_keychain', 'Keychain that has signatures'),
     ('sign_id_installer', 'Installer signature name'),
     ('sign_id_app', 'Application/Tool signature name'),
-    ('sign_prefix', 'codesign identifier prefix'),
-    ]
-env = config.make_env(['packager'], vars)
+    ('sign_prefix', 'codesign identifier prefix'))
 
-# Configure
-conf = Configure(env)
+env.CBLoadTools('packager')
+conf = env.CBConfigure()
 
-# Packaging
-config.configure('packager', conf)
+# Version
+version = open('version/version.txt', 'r').read().strip()
+env.Replace(PACKAGE_VERSION = version)
 
 # this should be in packager.configure
-env['package_ignores'] += ['.DS_Store']
+env.Append(PACKAGE_IGNORES = ['.DS_Store'])
 
 sys.path.append('./src')
 import flatdistpkg, flatdistpackager
@@ -43,14 +41,14 @@ flatdistpkg.configure(conf)
 flatdistpackager.configure(conf)
 
 # Sub Packages
-for v in ('VIEWER', 'CLIENT', 'CONTROL', 'OSX_UNINSTALL'):
+for v in 'FAH_VIEWER FAH_CLIENT FAH_CONTROL FAH_CLIENT_OSX_UNINSTALL'.split():
     if not v + '_HOME' in os.environ: raise Exception, '%s_HOME not set' % v
 
 # needed only for old non-flat build
 packages = (
-    os.environ.get('CLIENT_HOME') + '/FAHClient.pkg',
-    os.environ.get('VIEWER_HOME') + '/FAHViewer.pkg',
-    os.environ.get('CONTROL_HOME') + '/FAHControl.pkg',
+    os.environ.get('FAH_CLIENT_HOME') + '/FAHClient.pkg',
+    os.environ.get('FAH_VIEWER_HOME') + '/FAHViewer.pkg',
+    os.environ.get('FAH_CONTROL_HOME') + '/FAHControl.pkg',
 )
 
 un_home = os.environ.get('OSX_UNINSTALL_HOME')
@@ -87,7 +85,7 @@ if not env.GetOption('clean'):
 # Required keys are name, home, pkg_id.
 distpkg_components = [
     {'name': 'FAHClient',
-        'home': os.environ.get('CLIENT_HOME'),
+        'home': os.environ.get('FAH_CLIENT_HOME'),
         'pkg_id': 'edu.stanford.folding.fahclient.pkg',
         # the cores that are run by the client currently require OSX 10.6+
         # so disable component install for pre-10.6
@@ -106,13 +104,13 @@ distpkg_components = [
         'sign_tools': ['usr/bin/FAHClient', 'usr/bin/FAHCoreWrapper'],
         },
     {'name': 'FAHViewer',
-        'home': os.environ.get('VIEWER_HOME'),
+        'home': os.environ.get('FAH_VIEWER_HOME'),
         'pkg_id': 'edu.stanford.folding.fahviewer.pkg',
         'must_close_apps': ['edu.stanford.folding.fahviewer'],
         'sign_apps': ['Applications/Folding@home/FAHViewer.app'],
         },
     {'name': 'FAHControl',
-        'home': os.environ.get('CONTROL_HOME'),
+        'home': os.environ.get('FAH_CONTROL_HOME'),
         'pkg_id': 'edu.stanford.folding.fahcontrol.pkg',
         'must_close_apps': ['edu.stanford.folding.fahcontrol'],
         'sign_apps': ['Applications/Folding@home/FAHControl.app'],
