@@ -41,7 +41,7 @@ flatdistpkg.configure(conf)
 flatdistpackager.configure(conf)
 
 # Sub Packages
-for v in 'FAH_VIEWER FAH_CLIENT FAH_CONTROL FAH_CLIENT_OSX_UNINSTALL'.split():
+for v in 'FAH_VIEWER FAH_CLIENT FAH_CONTROL FAH_CLIENT_OSX_UNINSTALLER'.split():
     if not v + '_HOME' in os.environ: raise Exception, '%s_HOME not set' % v
 
 # needed only for old non-flat build
