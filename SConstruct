@@ -50,7 +50,7 @@ packages = (
     os.environ.get('FAH_CONTROL_HOME') + '/FAHControl.pkg',
 )
 
-un_home = os.environ.get('OSX_UNINSTALL_HOME')
+un_home = os.environ.get('FAH_CLIENT_OSX_UNINSTALL_HOME')
 un_root = './dist/flatpkg/Uninstaller/root'
 un_pkg_name_file = os.path.join(un_home, 'package.txt')
 if not env.GetOption('clean'):
