@@ -25,12 +25,11 @@ env.CBAddVariables(
     ('sign_id_app', 'Application/Tool signature name'),
     ('sign_prefix', 'codesign identifier prefix'))
 
-env.CBLoadTools('packager')
+env.CBLoadTools('packager fah-client-version')
 conf = env.CBConfigure()
 
 # Version
-version = open('version/version.txt', 'r').read().strip()
-env.Replace(PACKAGE_VERSION = version)
+version = env.FAHClientVersion()
 
 # this should be in packager.configure
 env.Append(PACKAGE_IGNORES = ['.DS_Store'])
