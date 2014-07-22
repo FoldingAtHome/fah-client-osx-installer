@@ -465,7 +465,7 @@ def build_distribution_template(env, target=None):
     print 'generating ' + target
 
     distpkg_target = env.get('distpkg_target', '10.5')
-    distpkg_arch = env.get('distpkg_arch')    
+    distpkg_arch = env.get('distpkg_arch')
     if not distpkg_arch:
         distpkg_arch = env.get('package_arch')
     if distpkg_arch in (None, '', 'intel'):
@@ -479,6 +479,7 @@ def build_distribution_template(env, target=None):
     etree.SubElement(root, 'title').text = \
         env.get('package_name_lower') + '_title'
 
+    # non-root pkg installs are very buggy, so this should stay True
     distpkg_root_volume_only = env.get('distpkg_root_volume_only', True)
     allow_external = env.get('distpkg_allow_external_scripts', False)
     allow_ppc = distpkg_arch and 'ppc' in distpkg_arch and \
