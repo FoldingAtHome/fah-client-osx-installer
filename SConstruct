@@ -16,11 +16,6 @@ version = env.FAHClientVersion()
 # this should be in packager.configure
 env.Append(PACKAGE_IGNORES = ['.DS_Store'])
 
-sys.path.append('./src')
-import flatdistpkg, flatdistpackager
-flatdistpkg.configure(conf)
-flatdistpackager.configure(conf)
-
 # Sub Packages
 for v in 'FAH_VIEWER FAH_CLIENT FAH_CONTROL FAH_CLIENT_OSX_UNINSTALLER'.split():
     if not v + '_HOME' in os.environ: raise Exception, '%s_HOME not set' % v
@@ -111,7 +106,7 @@ parameters = {
     'distpkg_flat' : True,
     'distpkg_components' : distpkg_components,
     }
-pkg = env.FlatDistPackager(**parameters)
+pkg = env.Packager(**parameters)
 
 AlwaysBuild(pkg)
 env.Alias('package', pkg)
@@ -127,6 +122,4 @@ if 'distclean' in COMMAND_LINE_TARGETS:
         Glob(name + '*.pkg'),
         Glob(name + '*.mpkg'),
         Glob(name + '*.zip'),
-        Glob('*.pyc'),
-        Glob('src/*.pyc'),
         ])
