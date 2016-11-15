@@ -99,7 +99,6 @@ parameters = {
     'distpkg_resources' : [['Resources', '.']],
     'distpkg_welcome' : 'Welcome.rtf',
     'distpkg_license' : 'License.rtf',
-    'distpkg_conclusion' : 'Conclusion.rtf',
     'distpkg_background' : 'fah-light.png',
     'distpkg_target' : '10.6',
     'distpkg_arch' : env.get('package_arch', 'x86_64'),
