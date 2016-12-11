@@ -1,0 +1,11 @@
+/build
+/dist
+
+/config.log
+/.sconsign.dblite
+
+/package*.txt
+/fah-installer*.pkg
+/fah-installer*.zip
+
+.DS_Store
