@@ -64,7 +64,7 @@ distpkg_components = [
             'edu.stanford.folding.fahcontrol',
             ],
         # paths relative to 'root'
-        'sign_tools': ['usr/bin/FAHClient', 'usr/bin/FAHCoreWrapper'],
+        'sign_tools': ['usr/local/bin/FAHClient', 'usr/local/bin/FAHCoreWrapper'],
         },
     {'name': 'FAHViewer',
         'home': os.environ.get('FAH_VIEWER_HOME'),
