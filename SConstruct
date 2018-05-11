@@ -62,6 +62,8 @@ distpkg_components = [
         'must_close_apps': [
             'org.foldingathome.fahviewer',
             'org.foldingathome.fahcontrol',
+            'edu.stanford.folding.fahviewer',
+            'edu.stanford.folding.fahcontrol',
             ],
         # paths relative to 'root'
         'sign_tools': ['usr/local/bin/FAHClient', 'usr/local/bin/FAHCoreWrapper'],
@@ -69,13 +71,19 @@ distpkg_components = [
     {'name': 'FAHViewer',
         'home': os.environ.get('FAH_VIEWER_HOME'),
         'pkg_id': 'org.foldingathome.fahviewer.pkg',
-        'must_close_apps': ['org.foldingathome.fahviewer'],
+        'must_close_apps': [
+            'org.foldingathome.fahviewer',
+            'edu.stanford.folding.fahviewer',
+            ],
         'sign_apps': ['Applications/Folding@home/FAHViewer.app'],
         },
     {'name': 'FAHControl',
         'home': os.environ.get('FAH_CONTROL_HOME'),
         'pkg_id': 'org.foldingathome.fahcontrol.pkg',
-        'must_close_apps': ['org.foldingathome.fahcontrol'],
+        'must_close_apps': [
+            'org.foldingathome.fahcontrol',
+            'edu.stanford.folding.fahcontrol',
+            ],
         'sign_apps': ['Applications/Folding@home/FAHControl.app'],
         },
     {'name': 'Uninstaller',
