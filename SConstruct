@@ -107,7 +107,7 @@ parameters = {
     'distpkg_resources' : [['Resources', '.']],
     'distpkg_welcome' : 'Welcome.rtf',
     'distpkg_license' : 'License.rtf',
-    'distpkg_background' : 'fah-light.png',
+    'distpkg_background' : 'fah-opacity-50.png',
     'distpkg_customize' : 'always',
     'distpkg_target' : env.get('osx_min_ver', '10.6'),
     'distpkg_arch' : env.get('package_arch', 'x86_64'),
