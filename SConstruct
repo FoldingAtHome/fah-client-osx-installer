@@ -1,11 +1,12 @@
 # Setup
+from __future__ import print_function
 import os
 import sys
 env = Environment(ENV = os.environ)
 try:
     env.Tool('config', toolpath = [os.environ.get('CBANG_HOME')])
-except Exception, e:
-    raise Exception, 'CBANG_HOME not set?\n' + str(e)
+except Exception as e:
+    raise Exception('CBANG_HOME not set?\n' + str(e))
 
 env.CBLoadTools('packager fah-client-version')
 conf = env.CBConfigure()
@@ -16,9 +17,15 @@ version = env.FAHClientVersion()
 # this should be in packager.configure
 env.Append(PACKAGE_IGNORES = ['.DS_Store'])
 
+def eprint(*args, **kwargs):
+    print(*args, file=sys.stderr, **kwargs)
+
 # Sub Packages
 for v in 'FAH_VIEWER FAH_CLIENT FAH_CONTROL FAH_CLIENT_OSX_UNINSTALLER'.split():
-    if not v + '_HOME' in os.environ: raise Exception, '%s_HOME not set' % v
+    if not v + '_HOME' in os.environ: raise Exception('%s_HOME not set' % v)
+
+fah_control_home = os.environ.get('FAH_CONTROL_HOME')
+fah_control_prebuilt_home = os.environ.get('FAH_CONTROL_PREBUILT_HOME')
 
 un_home = os.environ.get('FAH_CLIENT_OSX_UNINSTALLER_HOME')
 un_root = './dist/flatpkg/Uninstaller/root'
@@ -37,6 +44,14 @@ if not env.GetOption('clean'):
     import shutil
     if os.path.exists(un_root): shutil.rmtree(un_root)
     env.CopyToPackage(un_pkg_files, un_root)
+
+    if (not (fah_control_home
+        and os.path.exists(fah_control_home + '/build/pkg'))
+        and (fah_control_prebuilt_home
+        and os.path.exists(fah_control_prebuilt_home + '/build/pkg'))
+        ):
+        eprint('WARNING: using FAH_CONTROL_PREBUILT_HOME')
+        fah_control_home = fah_control_prebuilt_home
 
 # Flat Dist Components
 # We must build component pkgs from scratch, but require each component
@@ -78,7 +93,7 @@ distpkg_components = [
         'sign_apps': ['Applications/Folding@home/FAHViewer.app'],
         },
     {'name': 'FAHControl',
-        'home': os.environ.get('FAH_CONTROL_HOME'),
+        'home': fah_control_home,
         'pkg_id': 'org.foldingathome.fahcontrol.pkg',
         'must_close_apps': [
             'org.foldingathome.fahcontrol',
