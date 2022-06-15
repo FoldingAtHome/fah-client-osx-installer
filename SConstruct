@@ -34,8 +34,6 @@ if not env.GetOption('clean'):
     un_pkg_name = open(un_pkg_name_file).read().strip()
 else:
     un_pkg_name = ''
-# replace '.mpkg.zip' with '.pkg'
-un_pkg_name = os.path.splitext(os.path.splitext(un_pkg_name)[0])[0] + '.pkg'
 un_pkg_files = [[os.path.join(un_home, un_pkg_name),
             'Applications/Folding@home/Uninstall Folding@home.pkg']]
 
