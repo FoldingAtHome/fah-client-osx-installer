@@ -1,5 +1,3 @@
-# Setup
-from __future__ import print_function
 import os
 import sys
 env = Environment(ENV = os.environ)
@@ -11,11 +9,7 @@ except Exception as e:
 env.CBLoadTools('packager fah-client-version')
 conf = env.CBConfigure()
 
-# Version
 version = env.FAHClientVersion()
-
-# this should be in packager.configure
-env.Append(PACKAGE_IGNORES = ['.DS_Store'])
 
 def eprint(*args, **kwargs):
     print(*args, file=sys.stderr, **kwargs)
@@ -65,7 +59,7 @@ if not env.GetOption('clean'):
 # Value for home should be an absolute path. Relative to here might work.
 # Most other path values are relative to component home.
 # Required keys are name, home, pkg_id.
-distpkg_components = [
+pkg_components = [
     {'name': 'FAHClient',
         'home': os.environ.get('FAH_CLIENT_HOME'),
         'pkg_id': 'org.foldingathome.fahclient.pkg',
@@ -79,7 +73,7 @@ distpkg_components = [
             'edu.stanford.folding.fahcontrol',
             ],
         # paths relative to 'root'
-        'sign_tools': ['usr/local/bin/FAHClient', 'usr/local/bin/FAHCoreWrapper'],
+        'sign_tools': ['usr/local/bin/*'],
         },
     {'name': 'FAHViewer',
         'home': os.environ.get('FAH_VIEWER_HOME'),
@@ -107,40 +101,31 @@ distpkg_components = [
         },
     ]
 
-# Package
 name = 'fah-installer'
 parameters = {
     'name' : name,
     'version' : version,
     'maintainer' : 'Joseph Coffland <joseph@cauldrondevelopment.com>',
     'vendor' : 'Folding@home',
-    'summary' : 'Folding@home ' + version,
+    'summary' : 'Folding@home',
     'description' : 'Folding@home ' + version + ' Installer Package',
     'pkg_type' : 'dist',
-    'distpkg_resources' : [['Resources', '.']],
-    'distpkg_welcome' : 'Welcome.rtf',
-    'distpkg_license' : 'License.rtf',
-    'distpkg_background' : 'fah-opacity-50.png',
-    'distpkg_customize' : 'always',
-    'distpkg_target' : env.get('osx_min_ver', '10.6'),
-    'distpkg_arch' : env.get('package_arch', 'x86_64'),
-    'distpkg_flat' : True,
-    'distpkg_components' : distpkg_components,
+    'pkg_resources' : [['Resources', '.']],
+    'pkg_welcome' : 'Welcome.rtf',
+    'pkg_license' : 'License.rtf',
+    'pkg_background' : 'fah-opacity-50.png',
+    'pkg_customize' : 'always',
+    'pkg_target' : env.get('osx_min_ver', '10.6'),
+    'pkg_components' : pkg_components,
     }
 pkg = env.Packager(**parameters)
 
 AlwaysBuild(pkg)
 env.Alias('package', pkg)
 
-# Clean
-Clean(pkg, ['build', 'dist', 'config.log'])
-# ensure *.zip not cleaned unless distclean
-NoClean(pkg, Glob('*.zip'))
+Clean(pkg, ['build', 'dist', 'config.log', 'package.txt'])
 if 'distclean' in COMMAND_LINE_TARGETS:
     Clean('distclean', [
         '.sconsign.dblite', '.sconf_temp', 'config.log',
-        'build', 'dist', 'package.txt', 'package-description.txt',
-        Glob(name + '*.pkg'),
-        Glob(name + '*.mpkg'),
-        Glob(name + '*.zip'),
+        'build', 'dist', 'package.txt', Glob(name + '*.pkg'),
         ])
